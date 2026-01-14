@@ -16,7 +16,7 @@ export class ForgotPasswordComponent {
   constructor(private router: Router) {}
 
   public navigate() {
-    this.router.navigate([routes.emailVerification]);
+    //this.router.navigate([routes.emailVerification]);
   }
   
   mobile: string = '';

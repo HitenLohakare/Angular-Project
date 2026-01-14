@@ -4,7 +4,8 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { BaseContextService } from './core/services/base-context.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideToastr, ToastNoAnimation } from 'ngx-toastr';
 
 
 export const appConfig: ApplicationConfig = {
@@ -20,6 +21,15 @@ export const appConfig: ApplicationConfig = {
       ]);
     }),
     provideHttpClient(withInterceptorsFromDi()),
-  
+    provideToastr({
+      toastComponent: ToastNoAnimation, // 👈 Use this to bypass legacy animations
+      timeOut: 4000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+      progressBar: true,
+      closeButton: true,
+      newestOnTop: true
+    }),
+
   ]
 };

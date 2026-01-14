@@ -3,6 +3,10 @@ import { routes } from '../../shared/routes/routes';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';  
+import { AuthInfoService } from '../services/auth-info-service';
+import { ApiResponse } from '../../models/apiresponse';
+import { error } from 'console';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -17,12 +21,14 @@ export class LoginComponent {
 
   constructor(
     private router: Router, 
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private authInfoService: AuthInfoService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      userName: ['', [Validators.required]],
+      mobileNumber: ['', [Validators.required]],
       password: ['', [Validators.required]]
     });
   }
@@ -44,12 +50,33 @@ export class LoginComponent {
 
   public onSubmit() {
     if (this.loginForm.valid) {
-      this.loginForm.disable(); // Disable the form to prevent multiple submissions
-      console.log('Form Submitted!', this.loginForm.value);
-      
+      this.loginForm.disable();
+
+      this.authInfoService.login(this.loginForm.value).subscribe({
+        next: (apiResponse: ApiResponse) => {
+          if (apiResponse.success) {
+
+            const { cipher, is2FASetupRequired } = apiResponse.data;
+            localStorage.setItem('login_cipher', cipher);
+            if (is2FASetupRequired) {
+              this.router.navigate([this.routes.twoStepSetupComponent]);
+            } else {
+              this.router.navigate([this.routes.twoStepVerfication]); 
+            }
+          } else {
+            this.loginForm.enable();
+            this.toastr.warning(apiResponse.error?.message, 'Invalid Form');
+          }
+        },
+        error: () => {
+          this.loginForm.enable();
+          this.toastr.error('Server error occurred. Please contact support.', 'Server Error');
+         }
+      });
     } else {
-      console.log('Form is invalid');
       this.loginForm.markAllAsTouched();
+    
     }
   }
+
 }

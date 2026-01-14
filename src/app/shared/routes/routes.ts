@@ -1,12 +1,11 @@
 export const routes={
+
   //Authentication
- login: '/login',
- forgotPassword: '/forgot-password',
- register: '/register',
- emailVerification: '/email-verification',
- twoStepVerfication: '/two-step-verification',
- resetPassword: '/reset-password',
- lockScreen: '/lock-screen',
+  login: '/login',
+  forgotPassword: '/forgot-password',
+  twoStepVerfication: '2fa/verify',
+  twoStepSetupComponent: '2fa/setup',
+  resetPassword: '/reset-password',
 
  //Dashboard
  index:'/index',

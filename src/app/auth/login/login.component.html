@@ -17,7 +17,7 @@
 
                                 <!-- Logo -->
                                 <div class="mx-auto mb-3 text-center">
-                                    <img src="assets/img/provilac-logo.png" style="width: 25%;" class="img-fluid" alt="Logo">
+                                    <img src="assets/img/provilac-logo.png" style="width: 35%;" class="img-fluid" alt="Logo">
                                 </div>
 
                                 <div class="">
@@ -28,10 +28,10 @@
                                     <div class="mb-3">
                                         <label class="form-label">User Name</label>
                                         <div class="input-group">
-                                            <input formControlName="userName" type="text" value="" class="form-control border-end-0">
+                                            <input formControlName="mobileNumber" type="text" value="" class="form-control border-end-0">
                                         </div>
-                                        <div *ngIf="controls['userName'].touched && controls['userName'].invalid" class="text-danger small mt-1">
-                                            <div *ngIf="controls['userName'].errors?.['required']">User name is required.</div>
+                                        <div *ngIf="controls['mobileNumber'].touched && controls['mobileNumber'].invalid" class="text-danger small mt-1">
+                                            <div *ngIf="controls['mobileNumber'].errors?.['required']">User name is required.</div>
                                         </div>
                                     </div>
 
