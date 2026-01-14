@@ -1,0 +1,72 @@
+<div class="main-wrapper">
+    <div class="container-fuild">
+        <div class="w-100 overflow-hidden position-relative flex-wrap d-block vh-100">
+            <div class="row">
+
+                <!-- Left Panel / Background -->
+                <div class="col-lg-5 d-none d-lg-flex align-items-center justify-content-center vh-100"
+                     style="background-color: #FEF1EB !important; color: #F26522 !important;">
+                    <img src="assets/img/authentication/login-img-02.png" alt="Img">
+                </div>
+
+                <!-- Right Panel / Login Form -->
+                <div class="col-lg-7 col-md-12 col-sm-12">
+                    <div class="row justify-content-center align-items-center vh-100 overflow-auto">
+                        <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="w-100 p-4 d-flex flex-column justify-content-between">
+
+                                <!-- Logo -->
+                                <div class="mx-auto mb-3 text-center">
+                                    <img src="assets/img/provilac-logo.png" style="width: 25%;" class="img-fluid" alt="Logo">
+                                </div>
+
+                                <div class="">
+                                    <div class="text-center mb-3">
+                                        <h2 class="mb-2">Sign In</h2>
+                                        <p class="mb-0">Please enter your details to sign in</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">User Name</label>
+                                        <div class="input-group">
+                                            <input formControlName="userName" type="text" value="" class="form-control border-end-0">
+                                        </div>
+                                        <div *ngIf="controls['userName'].touched && controls['userName'].invalid" class="text-danger small mt-1">
+                                            <div *ngIf="controls['userName'].errors?.['required']">User name is required.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Password</label>
+                                        <div class="input-group input-group-flat pass-group">
+                                            <input formControlName="password" [type]="password[1] ? 'text' : 'password' " class="pass-input form-control">
+                                            <span class="input-group-text toggle-password" (click)="togglePassword(1)" tabindex="0"><i class="ti" [ngClass]=" password[1] ? 'ti-eye' : 'ti-eye-off'"></i></span>
+                                        </div>
+                                        <div *ngIf="controls['password'].touched && controls['password'].invalid" class="text-danger small mt-1">
+                                            <div *ngIf="controls['password'].errors?.['required']">Password is required.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <div class="text-end">
+                                            <a [routerLink]="['/forgot-password']" class="link-danger">Forgot Password?</a>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                                    </div>
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="mt-5 pb-4 text-center">
+                                    <p class="mb-0 text-gray-9">Copyright © 2025 - Provilac</p>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

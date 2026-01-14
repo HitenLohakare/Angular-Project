@@ -1,0 +1,56 @@
+<div class="main-wrapper">
+    <div class="container-fuild">
+        <div class="w-100 overflow-hidden position-relative flex-wrap d-block vh-100">
+            <div class="row">
+                <!-- Left Panel / Background Image -->
+                <div class="col-lg-5 d-none d-lg-flex align-items-center justify-content-center vh-100"
+                     style="background-color: #FEF1EB !important; color: #F26522 !important;">
+                    <img src="https://smarthr.co.in/demo/html/template/assets/img/bg/authentication-bg-08.svg" alt="Img">
+                </div>
+
+                <!-- Right Panel / OTP Form -->
+                <div class="col-lg-7 col-md-12 col-sm-12">
+                    <div class="row justify-content-center align-items-center vh-100 overflow-auto">
+                        <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                            <form (ngSubmit)="navigation()" class="w-100 p-4 d-flex flex-column justify-content-between">
+
+                                <!-- Logo -->
+                                <div class="mx-auto mb-3 text-center">
+                                    <img src="assets/img/provilac-logo.png" style="width: 25%;" class="img-fluid" alt="Logo">
+                                </div>
+
+                                <!-- OTP Instructions -->
+                                <div class="text-center mb-3">
+                                    <h2 class="mb-2">2 Step Verification</h2>
+                                    <p class="mb-0">Enter the 6-digit verification code you received on your authenticator app</p>
+                                </div>
+
+                                <!-- OTP Input -->
+                                <div class="digit-group login-form-control d-flex align-items-center justify-content-center gap-3 mb-4" data-group-name="digits" data-autosubmit="false">
+                                    <input type="text" class="text-center fs-20 fw-bold rounded" id="digit-1" name="digit-1" data-next="digit-2" maxlength="1">
+                                    <input type="text" class="text-center fs-20 fw-bold rounded" id="digit-2" name="digit-2" data-next="digit-3" data-previous="digit-1" maxlength="1">
+                                    <input type="text" class="text-center fs-20 fw-bold rounded" id="digit-3" name="digit-3" data-next="digit-4" data-previous="digit-2" maxlength="1">
+                                    <input type="text" class="text-center fs-20 fw-bold rounded" id="digit-4" name="digit-4" data-next="digit-5" data-previous="digit-3" maxlength="1">
+                                    <input type="text" class="text-center fs-20 fw-bold rounded" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" maxlength="1">
+                                    <input type="text" class="text-center fs-20 fw-bold rounded" id="digit-6" name="digit-6" data-previous="digit-5" maxlength="1">
+                                </div>
+
+                                <!-- Verify Button -->
+                                <div class="mb-3">
+                                    <button type="submit" class="btn btn-primary w-100">Verify My Account</button>
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="mt-5 pb-4 text-center">
+                                    <p class="mb-0 text-gray-9">Copyright © 2025 - Provilac</p>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Right Panel -->
+            </div>
+        </div>
+    </div>
+</div>
