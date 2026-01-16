@@ -2,10 +2,10 @@ import {ApplicationConfig, importProvidersFrom, inject, provideAppInitializer, p
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { BaseContextService } from './core/services/base-context.service';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideToastr, ToastNoAnimation } from 'ngx-toastr';
+import { requestInterceptor } from './shared/model/network/request-interceptor';
 
 
 export const appConfig: ApplicationConfig = {
@@ -14,21 +14,15 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes), provideClientHydration(withEventReplay()),
-    provideAppInitializer(async () => {
-      const baseContext = inject(BaseContextService);
-      await Promise.all([
-      
-      ]);
-    }),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([requestInterceptor])),
     provideToastr({
-      toastComponent: ToastNoAnimation, // 👈 Use this to bypass legacy animations
+      toastComponent: ToastNoAnimation,
       timeOut: 4000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
       progressBar: true,
       closeButton: true,
-      newestOnTop: true
+      newestOnTop: true,
     }),
 
   ]

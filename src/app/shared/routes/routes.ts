@@ -9,8 +9,6 @@ export const routes={
 
  //Dashboard
  index:'/index',
- leadsDashboard: '/lead-dashboard',
- projectDashboard: '/project-dashboard',
 
  //Application
   application: '/application',

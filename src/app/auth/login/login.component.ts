@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { routes } from '../../shared/routes/routes';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';  
 import { AuthInfoService } from '../services/auth-info-service';
-import { ApiResponse } from '../../models/apiresponse';
-import { error } from 'console';
+import { ApiResponse } from '../../shared/model/apiresponse';
 import { ToastrService } from 'ngx-toastr';
+import { routes } from '../../shared/routes/routes';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink], // ✅ only NgModules/directives/components allowed here
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -18,6 +17,7 @@ export class LoginComponent {
   
   routes = routes;
   loginForm!: FormGroup;
+  isSubmitting = false;
 
   constructor(
     private router: Router, 
@@ -50,6 +50,7 @@ export class LoginComponent {
 
   public onSubmit() {
     if (this.loginForm.valid) {
+      this.isSubmitting = true;
       this.loginForm.disable();
 
       this.authInfoService.login(this.loginForm.value).subscribe({
@@ -64,19 +65,19 @@ export class LoginComponent {
               this.router.navigate([this.routes.twoStepVerfication]); 
             }
           } else {
+            this.isSubmitting = false;
             this.loginForm.enable();
-            this.toastr.warning(apiResponse.error?.message, 'Invalid Form');
+            this.toastr.warning(apiResponse.error?.message);
           }
         },
         error: () => {
+          this.isSubmitting = false;
           this.loginForm.enable();
-          this.toastr.error('Server error occurred. Please contact support.', 'Server Error');
+          this.toastr.error('Server error occurred. Please contact support.');
          }
-      });
+      }); 
     } else {
       this.loginForm.markAllAsTouched();
-    
     }
   }
-
 }

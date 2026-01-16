@@ -441,16 +441,6 @@ export class DataService {
               base: 'index',
               route: routes.index,
             },
-            {
-              menuValue: 'Leads Dashboard',
-              base: 'lead-dashboard',
-              route: routes.leadsDashboard,
-            },
-            {
-              menuValue: 'Project Dashboard',
-              base: 'project-dashboard',
-              route: routes.projectDashboard,
-            },
           ],
         },
       ],

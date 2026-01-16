@@ -6,7 +6,8 @@
 
 @import 'ngx-toastr/toastr';
 
-@keyframes toast-slide-in {
+/* Animation Definition */
+@keyframes toast-slide-right {
   from {
     transform: translateX(100%);
     opacity: 0;
@@ -19,93 +20,58 @@
 
 #toast-container {
   padding-top: 20px;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-right: 20px;
 
   .ngx-toastr {
-    padding: 16px 16px 16px 50px;
-    width: 350px;
-    max-width: 100%; // 🔹 prevents overflow on small screens
-    border-radius: 12px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-                0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(4px);
-    animation: toast-slide-in 0.3s ease-out;
-    opacity: 0.95;
-    transition: all 0.3s ease;
+    background-color: #ffffff !important; /* Pure white background */
+    background-image: none !important;    /* ❌ Kills the icon */
+    color: #333333 !important;           /* Dark grey text */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 18px 45px 18px 20px !important; /* Extra right padding for close button */
+    width: 350px !important;
+    opacity: 1 !important;
+    
+    /* ✅ Slide-in animation from right */
+    animation: toast-slide-right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-    // Hover effects only for non-touch devices
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
-        opacity: 1;
-        transform: scale(1.02);
-      }
-    }
-
-    /* Title */
+    /* ❌ Hide the Header/Title */
     .toast-title {
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 4px;
+      display: none !important;
     }
 
-    /* Message */
     .toast-message {
-      font-size: 0.875rem;
-      opacity: 0.9;
+      font-size: 1rem;
       line-height: 1.4;
+      font-weight: 500;
     }
 
-    /* Success */
-    &.toast-success {
-      background-color: #f26522 !important;
-      background-image: none;
-    }
+    /* ✅ Proper Close Button Positioning */
+    .toast-close-button {
+      position: absolute !important;
+      top: 50% !important;
+      right: 15px !important;
+      transform: translateY(-50%) !important; /* Perfectly centers vertically */
+      color: #9ca3af !important;
+      font-size: 22px !important;
+      font-weight: 300 !important;
+      line-height: 1 !important;
+      text-shadow: none !important;
+      opacity: 0.7;
 
-    /* Error */
-    &.toast-error {
-      background-color: #dc3545 !important;
-      background-image: none;
-    }
-
-    /* Warning */
-    &.toast-warning {
-      background-color: #ffc107 !important;
-      color: #000;
-    }
-  }
-}
-
-/* ==========================
-   📱 Mobile (≤ 576px)
-   ========================== */
-@media (max-width: 576px) {
-  #toast-container {
-    padding-top: 10px;
-
-    .ngx-toastr {
-      width: 100%;
-      padding: 14px 14px 14px 44px;
-      border-radius: 10px;
-
-      .toast-title {
-        font-size: 0.95rem;
-      }
-
-      .toast-message {
-        font-size: 0.8rem;
+      &:hover {
+        color: #f26522 !important; /* Brand orange on hover */
+        opacity: 1;
       }
     }
-  }
-}
 
-/* ==========================
-   📱 Tablet (≤ 768px)
-   ========================== */
-@media (max-width: 768px) {
-  #toast-container .ngx-toastr {
-    width: 90%;
+    /* Progress Bar Color */
+    .toast-progress {
+      background-color: #f26522 !important; /* Brand orange */
+      height: 4px;
+      opacity: 1;
+    }
   }
 }
 

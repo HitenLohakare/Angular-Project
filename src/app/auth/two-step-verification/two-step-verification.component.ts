@@ -1,51 +1,99 @@
-import { Component } from '@angular/core';
-import { routes } from '../../shared/routes/routes';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { routes } from '../../shared/routes/routes';
+import { AuthInfoService } from '../services/auth-info-service'; // Assumed service location
+import { ApiResponse } from '../../shared/model/apiresponse';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-two-step-verification',
-  imports: [FormsModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './two-step-verification.component.html',
   styleUrl: './two-step-verification.component.scss'
 })
-export class TwoStepVerificationComponent {
- public routes = routes;
-  constructor(private router: Router) {}
+export class TwoStepVerificationComponent implements OnInit {
+  public routes = routes;
+  verificationForm: FormGroup;
+  isSubmitting = false;
 
-  public oneTimePassword = {
-    data1: "",
-    data2: "",
-    data3: "",
-    data4: ""
-  };
-  public ValueChanged(data: string, box: string): void {
-    if (box == 'digit-1' && data.length > 0) {
-      document.getElementById('digit-2')?.focus();
-    } else if (box == 'digit-2' && data.length > 0) {
-      document.getElementById('digit-3')?.focus();
-    } else if (box == 'digit-3' && data.length > 0) {
-      document.getElementById('digit-4')?.focus();
-    } else {
-      return
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authInfoService: AuthInfoService,
+    private toastr: ToastrService
+  ) 
+  
+  {
+    // Initialize form with 6 digits
+    this.verificationForm = this.fb.group({
+      otp: this.fb.array(
+        new Array(6).fill('').map(() => ['', [Validators.required, Validators.pattern('^[0-9]$')]])
+      )
+    });
+  }
+
+  ngOnInit(): void {}
+
+  get otpArray() {
+    return this.verificationForm.get('otp') as FormArray;
+  }
+
+  @HostListener('window:paste', ['$event'])
+  handleGlobalPaste(event: ClipboardEvent) {
+    const pastedData = event.clipboardData?.getData('text').trim() || '';
+    if (/^\d{6}$/.test(pastedData)) {
+      event.preventDefault();
+      const digits = pastedData.split('');
+      digits.forEach((digit, i) => {
+        if (i < 6) this.otpArray.at(i).setValue(digit);
+      });
+      document.getElementById('digit-6')?.focus();
     }
   }
-  public tiggerBackspace(data: string, box: string) {
-    let StringyfyData;
-    if (data) {
-      StringyfyData = data.toString();
-    } else {
-      StringyfyData = null;
-    }
-    if (box == 'digit-4' && StringyfyData == null) {
-      document.getElementById('digit-3')?.focus();
-    } else if (box == 'digit-3' && StringyfyData == null) {
-      document.getElementById('digit-2')?.focus();
-    } else if (box == 'digit-2' && StringyfyData == null) {
-      document.getElementById('digit-1')?.focus();
+
+  onInput(event: any, index: number) {
+    if (event.target.value && index < 5) {
+      document.getElementById(`digit-${index + 2}`)?.focus();
     }
   }
-  navigation() {
-    this.router.navigate([routes.resetPassword])
+
+  onKeyDown(event: KeyboardEvent, index: number) {
+    if (event.key === 'Backspace' && !this.otpArray.at(index).value && index > 0) {
+      document.getElementById(`digit-${index}`)?.focus();
+    }
+  }
+
+  verifyOTP() {
+    if (this.verificationForm.invalid) return;
+
+    this.isSubmitting = true;
+    this.verificationForm.disable();
+
+    const otpCode = this.otpArray.value.join('');
+    const loginCipher = localStorage.getItem("login_cipher") || '';
+
+    // Verify against API
+    this.authInfoService.loginTwoFactor(otpCode, loginCipher).subscribe({
+      next: (apiResponse: ApiResponse) => {
+        if (apiResponse.success) {
+          this.authInfoService.setToken(apiResponse.data.token);
+          this.router.navigate([this.routes.index]);
+        } else {
+          this.resetForm(apiResponse.error?.message || 'Invalid OTP');
+        }
+      },
+      error: () => {
+        this.resetForm('Server error. Please try again later.');
+      }
+    }); 
+  }
+
+  private resetForm(message: string) {
+    this.isSubmitting = false;
+    this.verificationForm.enable();
+    this.toastr.warning(message);
   }
 }
