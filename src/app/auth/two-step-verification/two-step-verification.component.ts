@@ -6,6 +6,7 @@ import { routes } from '../../shared/routes/routes';
 import { AuthInfoService } from '../services/auth-info-service'; // Assumed service location
 import { ApiResponse } from '../../shared/model/apiresponse';
 import { ToastrService } from 'ngx-toastr';
+import { User } from '../../shared/model/user';
 
 @Component({
   selector: 'app-two-step-verification',
@@ -14,9 +15,9 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './two-step-verification.component.html',
   styleUrl: './two-step-verification.component.scss'
 })
-export class TwoStepVerificationComponent implements OnInit {
+export class TwoStepVerificationComponent {
   public routes = routes;
-  verificationForm: FormGroup;
+  verificationForm!: FormGroup;
   isSubmitting = false;
 
   constructor(
@@ -24,18 +25,15 @@ export class TwoStepVerificationComponent implements OnInit {
     private router: Router,
     private authInfoService: AuthInfoService,
     private toastr: ToastrService
-  ) 
-  
-  {
-    // Initialize form with 6 digits
+  ) {}
+
+  ngOnInit() {
     this.verificationForm = this.fb.group({
       otp: this.fb.array(
         new Array(6).fill('').map(() => ['', [Validators.required, Validators.pattern('^[0-9]$')]])
       )
     });
   }
-
-  ngOnInit(): void {}
 
   get otpArray() {
     return this.verificationForm.get('otp') as FormArray;
@@ -73,13 +71,17 @@ export class TwoStepVerificationComponent implements OnInit {
     this.verificationForm.disable();
 
     const otpCode = this.otpArray.value.join('');
-    const loginCipher = localStorage.getItem("login_cipher") || '';
+    const loginCipher = this.authInfoService.getCipher() || '';
 
     // Verify against API
-    this.authInfoService.loginTwoFactor(otpCode, loginCipher).subscribe({
+    this.authInfoService.verifyTwoFactor(null, otpCode, loginCipher).subscribe({
       next: (apiResponse: ApiResponse) => {
         if (apiResponse.success) {
           this.authInfoService.setToken(apiResponse.data.token);
+          const loggedInUser: User = JSON.parse(
+            JSON.stringify(apiResponse.data.userDTO)
+          );
+          this.authInfoService.setUser(loggedInUser);
           this.router.navigate([this.routes.index]);
         } else {
           this.resetForm(apiResponse.error?.message || 'Invalid OTP');

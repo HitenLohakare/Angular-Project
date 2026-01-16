@@ -1,6 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core'; // Add HostListener
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { QRCodeComponent } from 'angularx-qrcode';
@@ -17,8 +16,8 @@ import { ToastrService } from 'ngx-toastr';
   imports: [CommonModule, ReactiveFormsModule, QRCodeComponent],
   templateUrl: './two-step-setup.component.html'
 })
-export class TwoStepSetupComponent implements OnInit {
-  setupForm: FormGroup;
+export class TwoStepSetupComponent {
+  setupForm!: FormGroup;
   qrData: string = '';
   secretKey: string = '';
   isSubmitting = false;
@@ -26,24 +25,24 @@ export class TwoStepSetupComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private router: Router,
     private clipboard: Clipboard,
     private authInfoService: AuthInfoService,
     private toastr: ToastrService
-  ) {
-    this.setupForm = this.fb.group({
-      otp: this.fb.array(
-        new Array(6).fill('').map(() => ['', [Validators.required, Validators.pattern('^[0-9]$')]])
-      )
-    });
-  }
+  ) {}
 
   get otpArray() {
     return this.setupForm.get('otp') as FormArray;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+
+    this.setupForm = this.fb.group({
+      otp: this.fb.array(
+        new Array(6).fill('').map(() => ['', [Validators.required, Validators.pattern('^[0-9]$')]])
+      )
+    });
+    
     // Logic for generating keys
     this.secretKey = this.generateSecretKey(16);
     this.qrData = `otpauth://totp/Provilac:User?secret=${this.secretKey}&issuer=Provilac`;
@@ -92,10 +91,11 @@ export class TwoStepSetupComponent implements OnInit {
     this.isSubmitting = true;
     
    
-    this.authInfoService.verifyTwoFactor(this.secretKey, this.otpArray.value.join(''), localStorage.getItem("login_cipher")).subscribe({
+    this.authInfoService.verifyTwoFactor(this.secretKey, this.otpArray.value.join(''), this.authInfoService.getCipher() || '').subscribe({
       next: (apiResponse: ApiResponse) => {
         if(apiResponse.success) {
           this.authInfoService.setToken(apiResponse.data.token);
+          this.authInfoService.setUser(apiResponse.data.userDTO);
           this.router.navigate([this.routes.index])
         } else {
           this.isSubmitting = false;

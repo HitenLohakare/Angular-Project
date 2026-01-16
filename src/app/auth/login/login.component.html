@@ -27,8 +27,8 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">User Name</label>
-                                        <div class="input-group">
-                                            <input formControlName="mobileNumber" type="text" value="" class="form-control border-end-0">
+                                        <div class="position-relative">
+                                            <input formControlName="mobileNumber" type="text" [class.is-invalid]="controls['mobileNumber'].touched && controls['mobileNumber'].invalid" value="" class="form-control">
                                         </div>
                                         <div *ngIf="controls['mobileNumber'].touched && controls['mobileNumber'].invalid" class="text-danger small mt-1">
                                             <div *ngIf="controls['mobileNumber'].errors?.['required']">User name is required.</div>
@@ -37,9 +37,12 @@
 
                                     <div class="mb-3">
                                         <label class="form-label">Password</label>
-                                        <div class="input-group input-group-flat pass-group">
-                                            <input formControlName="password" [type]="password[1] ? 'text' : 'password' " class="pass-input form-control">
-                                            <span class="input-group-text toggle-password" (click)="togglePassword(1)" tabindex="0"><i class="ti" [ngClass]=" password[1] ? 'ti-eye' : 'ti-eye-off'"></i></span>
+                                        <div class="position-relative">
+                                            <input formControlName="password" [type]="showPassword ? 'text' : 'password' " [class.is-invalid]="controls['password'].touched && controls['password'].invalid" class="form-control">
+                                            <span (click)="showPassword = !showPassword" 
+                                                  class="position-absolute end-0 top-50 translate-middle-y me-3 cursor-pointer">
+                                                <i class="bi" [class.bi-eye]="showPassword" [class.bi-eye-slash]="!showPassword"></i>
+                                            </span>
                                         </div>
                                         <div *ngIf="controls['password'].touched && controls['password'].invalid" class="text-danger small mt-1">
                                             <div *ngIf="controls['password'].errors?.['required']">Password is required.</div>

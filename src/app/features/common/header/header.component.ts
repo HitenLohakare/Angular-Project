@@ -1,18 +1,20 @@
 import { Component } from '@angular/core';
 import { routes } from '../../../shared/routes/routes';
 import { MainMenu, Menu } from '../../../shared/model/sidebar.model';
-import { DataService } from '../../../shared/data/data.service';
 import { CommonService } from '../../../shared/common/common.service';
 import { SidebarService } from '../../../shared/sidebar/sidebar.service';
 import { SettingsService } from '../../../shared/settings/settings.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthInfoService } from '../../../auth/services/auth-info-service';
+import { User } from '../../../shared/model/user';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrl: './header.component.scss',
-    imports: [RouterLink]
+    imports: [RouterLink, CommonModule]
 })
 export class HeaderComponent {
  
@@ -34,12 +36,16 @@ export class HeaderComponent {
   multiLevel1 = false;
   multiLevel2 = false;
   multiLevel3 = false;
+  
+  user!: User;
+
   constructor(
-    private data: DataService,
     private common: CommonService,
     private sidebar: SidebarService,
     public settings: SettingsService,
     private sideBar: SidebarService,
+    private authInfoService: AuthInfoService,
+    private router: Router,
   ) {
     this.common.base.subscribe((base: string) => {
       this.base = base;
@@ -70,6 +76,10 @@ export class HeaderComponent {
     } else {
       document.exitFullscreen();
     }
+  }
+
+  ngOnInit(): void {
+    this.user = this.authInfoService.getUser()!;
   }
 
   public toggleSidebar(): void {
@@ -176,5 +186,10 @@ export class HeaderComponent {
   }
   multiLevelThree() {
     this.multiLevel3 = !this.multiLevel3;
+  }
+
+  logout() {
+    this.authInfoService.logOut();
+    this.router.navigate([routes.login])
   }
 }

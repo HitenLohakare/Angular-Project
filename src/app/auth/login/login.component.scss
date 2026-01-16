@@ -1,0 +1,15 @@
+.cursor-pointer {
+    cursor: pointer;
+    z-index: 10;
+    color: #6c757d; // Muted gray color
+    
+    &:hover {
+        color: #F26522; // Changes to your primary orange on hover
+    }
+}
+
+/* Remove the default Bootstrap error icon from the input background */
+.form-control.is-invalid {
+    background-image: none !important;
+    padding-right: 2.5rem; /* Ensure space for your eye icon */
+}

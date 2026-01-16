@@ -17,9 +17,10 @@ export class LoginComponent {
   
   routes = routes;
   loginForm!: FormGroup;
+  showPassword = false;
   isSubmitting = false;
 
-  constructor(
+  constructor (
     private router: Router, 
     private formBuilder: FormBuilder,
     private authInfoService: AuthInfoService,
@@ -33,17 +34,7 @@ export class LoginComponent {
     });
   }
 
-  public navigate() {
-    this.router.navigate([routes.index]);
-  }
-
-  public password : boolean[] = [false];
-
-  public togglePassword(index: any){
-    this.password[index] = !this.password[index]
-  }
-
-  // 👇 Define a getter property (not a function call)
+  //Define a getter property (not a function call)
   get controls() {
     return this.loginForm.controls;
   }
@@ -58,7 +49,8 @@ export class LoginComponent {
           if (apiResponse.success) {
 
             const { cipher, is2FASetupRequired } = apiResponse.data;
-            localStorage.setItem('login_cipher', cipher);
+            this.authInfoService.setCipher(cipher);
+
             if (is2FASetupRequired) {
               this.router.navigate([this.routes.twoStepSetupComponent]);
             } else {
@@ -77,6 +69,8 @@ export class LoginComponent {
          }
       }); 
     } else {
+      this.isSubmitting = false;  
+      this.loginForm.enable();
       this.loginForm.markAllAsTouched();
     }
   }

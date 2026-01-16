@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, AbstractControlOptions } from '@angular/forms';
 import { AuthInfoService } from '../services/auth-info-service';
 import { ToastrService } from 'ngx-toastr';
 import { ApiResponse } from '../../shared/model/apiresponse';
@@ -21,8 +21,8 @@ export class ChangePasswordComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private _authInfoService: AuthInfoService,
-    private _toastr: ToastrService
+    private authInfoService: AuthInfoService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -32,8 +32,8 @@ export class ChangePasswordComponent implements OnInit {
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]]
     }, { 
-      validators: this.passwordMatchValidator 
-    });
+      validators: [this.passwordMatchValidator]
+    } as AbstractControlOptions);
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -46,17 +46,17 @@ export class ChangePasswordComponent implements OnInit {
   onSubmit() {
     if (this.passwordForm.valid) {
       console.log('Form Data:', this.passwordForm.value);
-      this._authInfoService.changePassword(this.passwordForm.value).subscribe({
+      this.authInfoService.changePassword(this.passwordForm.value).subscribe({
         next: (apiResponse: ApiResponse) => {
           if (apiResponse.success) {
-            this._toastr.success('Password changed successfully');
+            this.toastr.success('Password changed successfully');
           } else {
-            this._toastr.warning(apiResponse.error?.message);
+            this.toastr.warning(apiResponse.error?.message);
             this.passwordForm.enable();
           }
         },
         error: () => {
-          this._toastr.error('Server error occurred. Please contact support.');
+          this.toastr.error('Server error occurred. Please contact support.');
         }
       });
     } else {

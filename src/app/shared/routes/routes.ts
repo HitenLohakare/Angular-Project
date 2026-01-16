@@ -5,7 +5,7 @@ export const routes={
   forgotPassword: '/forgot-password',
   twoStepVerfication: '2fa/verify',
   twoStepSetupComponent: '2fa/setup',
-  resetPassword: '/reset-password',
+  changePassword: '/change-password',
 
  //Dashboard
  index:'/index',
