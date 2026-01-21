@@ -86,7 +86,7 @@ export class AuthInfoService {
             .set('password', body.password);
 
         return this.http.post<ApiResponse>(
-            `${this.baseUrl}/admin-panel/login`,
+            `${this.baseUrl}/admin/login`,
             null,
             { params }
         );
@@ -101,7 +101,7 @@ export class AuthInfoService {
             params = params.set('secretKey', secretKey);
         }
         return this.http.post<ApiResponse>(
-            `${this.baseUrl}/admin-panel/2fa`,
+            `${this.baseUrl}/admin/2fa`,
             null,
             { params }
         );
@@ -114,7 +114,31 @@ export class AuthInfoService {
             .set('newPasswordConfirm', passwords.confirmPassword);
 
         return this.http.post<ApiResponse>(
-            `${this.baseUrl}/restapi/admin-panel/changePassword`,
+            `${this.baseUrl}/restapi/admin/changePassword`,
+            null,
+            { params }
+        );
+    }
+
+    forgetPassword(mobileNumber: string) {
+        const params = new HttpParams()
+            .set('mobileNumber', mobileNumber);
+
+        return this.http.post<ApiResponse>(
+            `${this.baseUrl}/admin/forgotPassword`,
+            null,
+            { params }
+        );
+    }
+
+    resetPassword(passwords: any, token: string) {
+        const params = new HttpParams()
+            .set('newPassword', passwords.newPassword)
+            .set('confirmPassword', passwords.confirmPassword)
+            .set('token', token);
+
+        return this.http.post<ApiResponse>(
+            `${this.baseUrl}/admin/resetPassword`,
             null,
             { params }
         );

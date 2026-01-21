@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { AuthInfoService } from '../services/auth-info-service';
 import { ToastrService } from 'ngx-toastr';
 import { ApiResponse } from '../../shared/model/apiresponse';
+import { Router } from '@angular/router';
+import { routes } from '../../shared/routes/routes';
 
 @Component({
   selector: 'app-change-password',
@@ -18,10 +20,12 @@ export class ChangePasswordComponent implements OnInit {
   showOldPassword = false;
   showNewPassword = false;
   showConfirmPassword = false;
+  routes = routes;
 
   constructor(
     private fb: FormBuilder,
     private authInfoService: AuthInfoService,
+    private router: Router,
     private toastr: ToastrService
   ) {}
 
@@ -50,6 +54,8 @@ export class ChangePasswordComponent implements OnInit {
         next: (apiResponse: ApiResponse) => {
           if (apiResponse.success) {
             this.toastr.success('Password changed successfully');
+            this.authInfoService.logOut();
+            this.router.navigate([routes.login])
           } else {
             this.toastr.warning(apiResponse.error?.message);
             this.passwordForm.enable();

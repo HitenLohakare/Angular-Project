@@ -16,9 +16,9 @@ export const routes: Routes = [
         {path: 'login', loadComponent: () => import('./auth/login/login.component').then((m) => m.LoginComponent),},
         {path: '2fa/verify', loadComponent: () => import('./auth/two-step-verification/two-step-verification.component').then((m) => m.TwoStepVerificationComponent),},
         {path: '2fa/setup', loadComponent: () => import('./auth/two-step-setup/two-step-setup.component').then((m) => m.TwoStepSetupComponent),},
-        {path: 'change-password', loadComponent: () => import('./auth/change-password/change-password.component').then((m) => m.ChangePasswordComponent),},
         {path: 'forgot-password', loadComponent: () => import('./auth/forgot-password/forgot-password.component').then((m) => m.ForgotPasswordComponent),},
-    ]
+        {path: 'reset-password', loadComponent: () => import('./auth/reset-password/reset-password').then((m) => m.ResetPasswordComponent),},
+      ]
   },
   
   //Error
@@ -36,6 +36,7 @@ export const routes: Routes = [
       children:[
           {path: 'index', loadComponent: () => import('./features/main-menu/dashboards/deals-dashboard/deals-dashboard.component').then((m) => m.DealsDashboardComponent),},
           //layou
+          {path: 'change-password', loadComponent: () => import('./auth/change-password/change-password.component').then((m) => m.ChangePasswordComponent),},
           { path: 'layout-mini', loadComponent: () => import('./features/main-menu/dashboards/modal-dashboard/modal-dashboard.component').then((m) => m.ModalDashboardComponent), },
           { path: 'layout-hoverview', loadComponent: () => import('./features/main-menu/dashboards/modal-dashboard/modal-dashboard.component').then((m) => m.ModalDashboardComponent), },
           { path: 'layout-hidden', loadComponent: () => import('./features/main-menu/dashboards/modal-dashboard/modal-dashboard.component').then((m) => m.ModalDashboardComponent), },
