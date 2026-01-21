@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthComponent } from './auth/auth.component';
 import { LoginComponent } from './auth/login/login.component';
+import { ImportExportData } from './features/p9/import-export-data/import-export-data';
 
 export const routes: Routes = [
   {
@@ -35,6 +36,7 @@ export const routes: Routes = [
       loadComponent: () => import('./features/features.component').then((m) => m.FeaturesComponent),
       children:[
           {path: 'index', loadComponent: () => import('./features/main-menu/dashboards/deals-dashboard/deals-dashboard.component').then((m) => m.DealsDashboardComponent),},
+          {path: 'import-export', loadComponent: () => import('./features/p9/import-export-data/import-export-data').then((m) => m.ImportExportData),},
           //layou
           {path: 'change-password', loadComponent: () => import('./auth/change-password/change-password.component').then((m) => m.ChangePasswordComponent),},
           { path: 'layout-mini', loadComponent: () => import('./features/main-menu/dashboards/modal-dashboard/modal-dashboard.component').then((m) => m.ModalDashboardComponent), },

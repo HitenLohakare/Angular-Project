@@ -23,6 +23,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^21.1.0",
     "@angular/cdk": "^20.2.9",
     "@angular/common": "^20.3.0",
     "@angular/compiler": "^20.3.0",
@@ -45,6 +46,8 @@
     "ng-apexcharts": "^2.0.3",
     "ng-recaptcha-2": "^16.0.1",
     "ngx-bootstrap": "^20.0.2",
+    "ngx-chips": "^3.0.0",
+    "ngx-editor": "^19.0.0-beta.1",
     "ngx-lightbox": "^3.0.0",
     "ngx-scrollbar": "^18.0.0",
     "ngx-toastr": "^19.1.0",
